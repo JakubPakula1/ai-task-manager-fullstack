@@ -63,3 +63,4 @@ build/
 
 # Logs folder
 logs/
+backend/src/main/resources/application.properties
