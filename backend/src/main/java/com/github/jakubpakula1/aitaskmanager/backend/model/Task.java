@@ -1,9 +1,7 @@
 package com.github.jakubpakula1.aitaskmanager.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Task {
 
     @Id
@@ -24,25 +24,15 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    public Task(){
-    }
-
-    public Task(LocalDateTime updatedAt, LocalDateTime createdAt, Status status, String description, String title, Long id, User user) {
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
-        this.status = status;
-        this.description = description;
-        this.title = title;
-        this.id = id;
-        this.user = user;
-    }
 
     @PrePersist
     protected void onCreate(){

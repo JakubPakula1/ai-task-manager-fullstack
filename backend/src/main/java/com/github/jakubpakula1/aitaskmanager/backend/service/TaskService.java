@@ -8,6 +8,8 @@ import com.github.jakubpakula1.aitaskmanager.backend.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,8 @@ public class TaskService {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .status(Task.Status.TODO)
+                .createdAt(LocalDateTime.now()) // Ensure LocalDateTime is used
+                .updatedAt(LocalDateTime.now())
                 .user(user)
                 .build();
         Task saved = taskRepository.save(task);
@@ -34,15 +38,19 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    private TaskResponse toResponse(Task task){
+    private TaskResponse toResponse(Task task) {
         TaskResponse response = new TaskResponse();
         response.setId(task.getId());
         response.setTitle(task.getTitle());
         response.setDescription(task.getDescription());
         response.setStatus(task.getStatus());
-        response.setCreatedAt(task.getCreatedAt().toString());
-        response.setUpdatedAt(task.getUpdatedAt().toString());
+        response.setCreatedAt(formatDateTime(task.getCreatedAt()));
+        response.setUpdatedAt(formatDateTime(task.getUpdatedAt()));
         response.setUserId(task.getUser().getId());
         return response;
+    }
+
+    private String formatDateTime(LocalDateTime dateTime) {
+        return dateTime != null ? dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
     }
 }
