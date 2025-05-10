@@ -21,19 +21,22 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<TaskResponse> createTask(
+    public ResponseEntity<ApiResponse<TaskResponse>> createTask(
             @RequestBody CreateTaskRequest request,
             @AuthenticationPrincipal User user
             ){
-        TaskResponse response = taskService.createTask(request, user);
+        TaskResponse taskResponse = taskService.createTask(request, user);
+        ApiResponse<TaskResponse> response = new ApiResponse<>("success", "Task added successfully", taskResponse);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getTasks(
+    public ResponseEntity<ApiResponse<List<TaskResponse>>> getTasks(
             @AuthenticationPrincipal User user
     ){
-        return ResponseEntity.ok(taskService.getTaskByUser(user));
+        List<TaskResponse> taskList = taskService.getTaskByUser(user);
+        ApiResponse<List<TaskResponse>> response = new ApiResponse<>("success", "Tasks of user: " + user.getId(), taskList);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
