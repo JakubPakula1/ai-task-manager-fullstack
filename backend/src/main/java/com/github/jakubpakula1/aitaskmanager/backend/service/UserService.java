@@ -18,13 +18,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registerUser(User user){
-        Optional<User> existingUser = userRepository.findUserByEmail(user.getUsername());
-        if(existingUser.isPresent()){
-            throw new RuntimeException("User already exists");
-        }
-        return userRepository.save(user);
+public User registerUser(User user){
+    Optional<User> existingUser = userRepository.findUserByEmail(user.getUsername());
+    if(existingUser.isPresent()){
+        throw new RuntimeException("User already exists");
     }
+    if (user.getRole() == null || user.getRole().isBlank()) {
+        user.setRole("USER");
+    }
+    return userRepository.save(user);
+}
 
     public Optional<User> getUserByUsername(String username){
         return userRepository.findUserByEmail(username);

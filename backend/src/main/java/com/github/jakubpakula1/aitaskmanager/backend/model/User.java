@@ -28,12 +28,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role;
 
-    public User(Long id, String username, String password, String email) {
+    public User(Long id, String username, String password, String email, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = "USER";
+        this.role = role;
     }
 
     public User() {
