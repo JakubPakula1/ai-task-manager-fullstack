@@ -9,6 +9,7 @@ import com.github.jakubpakula1.aitaskmanager.backend.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +75,14 @@ public class TaskController {
         });
         TaskResponse updatedTask = taskService.updateTaskField(id, updates);
         ApiResponse<TaskResponse> response = new ApiResponse<>("success", "Task updated successfully", updatedTask);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("admin/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<TaskResponse>>> getAllTasks() {
+        List<TaskResponse> tasks = taskService.getAllTasks();
+        ApiResponse<List<TaskResponse>> response = new ApiResponse<>("success", "All tasks retrieved successfully", tasks);
         return ResponseEntity.ok(response);
     }
 }

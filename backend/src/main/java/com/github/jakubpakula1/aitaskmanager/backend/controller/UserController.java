@@ -6,8 +6,10 @@ import com.github.jakubpakula1.aitaskmanager.backend.model.User;
 import com.github.jakubpakula1.aitaskmanager.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -44,6 +46,13 @@ public class UserController {
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         ApiResponse<Void> response = new ApiResponse<>("success", "User deleted successfully", null);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("admin/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        ApiResponse<List<User>> response = new ApiResponse<>("success", "All users retrieved successfully", users);
         return ResponseEntity.ok(response);
     }
 }

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,5 +87,11 @@ public class TaskService {
         task.setUpdatedAt(LocalDateTime.now());
         Task updatedTask = taskRepository.save(task);
         return toResponse(updatedTask);
+    }
+
+    public List<TaskResponse> getAllTasks() {
+        return taskRepository.findAll().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 }

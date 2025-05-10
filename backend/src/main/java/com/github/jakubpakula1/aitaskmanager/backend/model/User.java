@@ -25,11 +25,15 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String role;
+
     public User(Long id, String username, String password, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = "USER";
     }
 
     public User() {
