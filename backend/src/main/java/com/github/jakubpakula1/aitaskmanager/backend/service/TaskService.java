@@ -2,6 +2,7 @@ package com.github.jakubpakula1.aitaskmanager.backend.service;
 
 import com.github.jakubpakula1.aitaskmanager.backend.dto.CreateTaskRequest;
 import com.github.jakubpakula1.aitaskmanager.backend.dto.TaskResponse;
+import com.github.jakubpakula1.aitaskmanager.backend.exception.ResourceNotFoundException;
 import com.github.jakubpakula1.aitaskmanager.backend.model.Task;
 import com.github.jakubpakula1.aitaskmanager.backend.model.User;
 import com.github.jakubpakula1.aitaskmanager.backend.repository.TaskRepository;
@@ -52,5 +53,14 @@ public class TaskService {
 
     private String formatDateTime(LocalDateTime dateTime) {
         return dateTime != null ? dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
+    }
+
+    public Task deleteTask(Long id){
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+
+        taskRepository.delete(task);
+
+        return task;
     }
 }
