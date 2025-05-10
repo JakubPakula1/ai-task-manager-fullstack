@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,5 +64,29 @@ public class TaskService {
         taskRepository.delete(task);
 
         return task;
+    }
+
+    public TaskResponse updateTaskField(Long id, Map<String, Object> updates){
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+
+        updates.forEach((field, value) -> {
+            switch (field){
+                case "title":
+                    task.setTitle((String) value);
+                    break;
+                case "description":
+                    task.setDescription((String) value);
+                    break;
+                case "status":
+                    task.setStatus(Task.Status.valueOf((String) value));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Field " + field + "is not updatable");
+            }
+        });
+        task.setUpdatedAt(LocalDateTime.now());
+        Task updatedTask = taskRepository.save(task);
+        return toResponse(updatedTask);
     }
 }

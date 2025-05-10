@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -53,6 +54,26 @@ public class TaskController {
         taskResponse.setUserId(deletedTask.getUser().getId());
 
         ApiResponse<TaskResponse> response = new ApiResponse<>("success", "Task deleted successfully", taskResponse);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<TaskResponse>> updateTaskField(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> updates
+            ){
+
+        updates.forEach((field, value) -> {
+            if ("status".equals(field)) {
+                try {
+                    Task.Status.valueOf((String) value);
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Invalid status value: " + value);
+                }
+            }
+        });
+        TaskResponse updatedTask = taskService.updateTaskField(id, updates);
+        ApiResponse<TaskResponse> response = new ApiResponse<>("success", "Task updated successfully", updatedTask);
         return ResponseEntity.ok(response);
     }
 }
