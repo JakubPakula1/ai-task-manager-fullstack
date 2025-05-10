@@ -18,7 +18,7 @@ public class UserService {
     }
 
     public User registerUser(User user){
-        Optional<User> existingUser = userRepository.findUserByUsername(user.getUsername());
+        Optional<User> existingUser = userRepository.findUserByEmail(user.getUsername());
         if(existingUser.isPresent()){
             throw new RuntimeException("User already exists");
         }
@@ -26,6 +26,6 @@ public class UserService {
     }
 
     public Optional<User> getUserByUsername(String username){
-        return userRepository.findUserByUsername(username);
+        return userRepository.findUserByEmail(username);
     }
 }

@@ -1,5 +1,6 @@
 package com.github.jakubpakula1.aitaskmanager.backend.controller;
 
+import com.github.jakubpakula1.aitaskmanager.backend.config.JwtUtil;
 import com.github.jakubpakula1.aitaskmanager.backend.model.User;
 import com.github.jakubpakula1.aitaskmanager.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,8 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-
+    @Autowired
+    private JwtUtil jwtUtil;
     @Autowired
     public UserController(UserService userService){
         this.userService = userService;
@@ -37,7 +39,8 @@ public class UserController {
         Optional<User> existingUser = userService.getUserByUsername(user.getUsername());
 
         if(existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword())){
-            return ResponseEntity.ok("Login successful");
+            String token = jwtUtil.generateToken(existingUser.get().getUsername());
+            return ResponseEntity.ok(token);
         }
         return ResponseEntity.badRequest().body("Invalid username or password");
     }
