@@ -10,7 +10,7 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-    public ApiResponse(T data, String message, String status) {
+    public ApiResponse(String status, String message, T data) {
         this.data = data;
         this.message = message;
         this.status = status;
