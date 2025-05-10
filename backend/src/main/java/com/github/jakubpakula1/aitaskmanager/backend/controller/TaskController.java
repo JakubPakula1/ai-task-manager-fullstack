@@ -6,6 +6,7 @@ import com.github.jakubpakula1.aitaskmanager.backend.dto.TaskResponse;
 import com.github.jakubpakula1.aitaskmanager.backend.model.Task;
 import com.github.jakubpakula1.aitaskmanager.backend.model.User;
 import com.github.jakubpakula1.aitaskmanager.backend.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +23,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<TaskResponse>> createTask(
-            @RequestBody CreateTaskRequest request,
+            @Valid @RequestBody CreateTaskRequest request,
             @AuthenticationPrincipal User user
             ){
         TaskResponse taskResponse = taskService.createTask(request, user);
