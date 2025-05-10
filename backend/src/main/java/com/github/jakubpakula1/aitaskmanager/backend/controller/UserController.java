@@ -2,6 +2,7 @@ package com.github.jakubpakula1.aitaskmanager.backend.controller;
 
 import com.github.jakubpakula1.aitaskmanager.backend.config.JwtUtil;
 import com.github.jakubpakula1.aitaskmanager.backend.dto.ApiResponse;
+import com.github.jakubpakula1.aitaskmanager.backend.dto.LoginResponse;
 import com.github.jakubpakula1.aitaskmanager.backend.model.User;
 import com.github.jakubpakula1.aitaskmanager.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,17 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        Optional<User> existingUser = userService.getUserByUsername(user.getUsername());
+@PostMapping("/login")
+public ResponseEntity<LoginResponse> login(@RequestBody User user) {
+    Optional<User> existingUser = userService.getUserByUsername(user.getUsername());
 
-        if(existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword())){
-            String token = jwtUtil.generateToken(existingUser.get().getUsername());
-            return ResponseEntity.ok(token);
-        }
-        return ResponseEntity.badRequest().body("Invalid username or password");
+    if (existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword())) {
+        String token = jwtUtil.generateToken(existingUser.get().getUsername());
+        LoginResponse response = new LoginResponse("success", token);
+        return ResponseEntity.ok(response);
     }
+    return ResponseEntity.badRequest().body(new LoginResponse("error", null));
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
