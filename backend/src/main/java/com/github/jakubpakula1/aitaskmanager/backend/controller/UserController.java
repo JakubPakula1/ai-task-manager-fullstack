@@ -1,14 +1,12 @@
 package com.github.jakubpakula1.aitaskmanager.backend.controller;
 
 import com.github.jakubpakula1.aitaskmanager.backend.config.JwtUtil;
+import com.github.jakubpakula1.aitaskmanager.backend.dto.ApiResponse;
 import com.github.jakubpakula1.aitaskmanager.backend.model.User;
 import com.github.jakubpakula1.aitaskmanager.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -25,13 +23,10 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user){
-        try{
-            userService.registerUser(user);
-            return ResponseEntity.ok("User registered successfully");
-        }catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<ApiResponse<User>> register(@RequestBody User user){
+        User createdUser = userService.registerUser(user);
+        ApiResponse<User> response = new ApiResponse<>("success", "Successfully registered", createdUser);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
@@ -43,5 +38,12 @@ public class UserController {
             return ResponseEntity.ok(token);
         }
         return ResponseEntity.badRequest().body("Invalid username or password");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        ApiResponse<Void> response = new ApiResponse<>("success", "User deleted successfully", null);
+        return ResponseEntity.ok(response);
     }
 }
