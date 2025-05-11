@@ -39,7 +39,7 @@ export default function TaskList({ tasks }) {
 
       {/* Sorting Options */}
       <div className="mb-4 flex items-center space-x-4">
-        <span className="text-gray-700">Sortuj według:</span>
+        <span className="text-gray-700">Sort by:</span>
         <div className="flex space-x-2">
           <button
             className={`px-3 py-1 rounded ${
@@ -49,7 +49,7 @@ export default function TaskList({ tasks }) {
             }`}
             onClick={() => setSortBy("priority")}
           >
-            Priorytet
+            Priority
           </button>
           <button
             className={`px-3 py-1 rounded ${
@@ -59,7 +59,7 @@ export default function TaskList({ tasks }) {
             }`}
             onClick={() => setSortBy("dueDate")}
           >
-            Termin
+            Due date
           </button>
           {sortBy !== "none" && (
             <button
@@ -94,7 +94,7 @@ export default function TaskList({ tasks }) {
 
                   {/* Wyświetlanie terminu wykonania */}
                   <p className="text-xs text-gray-500 mt-1">
-                    Termin: {formatDate(task.dueDate)}
+                    Due date: {formatDate(task.dueDate)}
                   </p>
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-4 flex items-center gap-4">
@@ -110,7 +110,7 @@ export default function TaskList({ tasks }) {
                     }`}
                   >
                     {task.status === "TODO"
-                      ? "Pending"
+                      ? "To do"
                       : task.status === "IN_PROGRESS"
                       ? "In Progress"
                       : task.status === "DONE"
