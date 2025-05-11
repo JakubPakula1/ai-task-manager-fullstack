@@ -1,11 +1,11 @@
 import Cookies from "js-cookie";
 import { useState } from "react";
 
-export default function TaskAddForm() {
+export default function TaskAddForm({ onTaskAdded }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("Medium");
-  const [status, setStatus] = useState("Pending");
+  const [priority, setPriority] = useState("MEDIUM");
+  const [status, setStatus] = useState("IN_PROGRESS");
   const [dueDate, setDueDate] = useState("");
   const [isLoadingPriority, setIsLoadingPriority] = useState(false);
   const [priorityError, setPriorityError] = useState(null);
@@ -102,13 +102,13 @@ export default function TaskAddForm() {
         return response.json();
       })
       .then((data) => {
-        console.log("Task created successfully:", data);
         setTitle("");
         setDescription("");
-        setPriority("Medium");
-        setStatus("Pending");
+        setPriority("MEDIUM");
+        setStatus("IN_PROGRESS");
         setDueDate("");
         setPriorityError(null);
+        onTaskAdded();
       })
       .catch((error) => {
         console.error("Error creating task:", error);
@@ -185,9 +185,9 @@ export default function TaskAddForm() {
           onChange={(e) => setPriority(e.target.value)}
           className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
         </select>
       </div>
       <div>
@@ -203,9 +203,9 @@ export default function TaskAddForm() {
           onChange={(e) => setStatus(e.target.value)}
           className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="Pending">Pending</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
+          <option value="TODO">To do</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="DONE">Completed</option>
         </select>
       </div>
       <div>

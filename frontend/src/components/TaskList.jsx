@@ -2,7 +2,7 @@ import { useState } from "react";
 import TaskEditForm from "./TaskEditForm";
 import TaskAddForm from "./TaskAddForm";
 
-export default function TaskList({ tasks }) {
+export default function TaskList({ tasks, refreshTasks }) {
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [sortBy, setSortBy] = useState("none");
 
@@ -34,7 +34,7 @@ export default function TaskList({ tasks }) {
 
       {/* Add Task Form */}
       <div className="mb-4">
-        <TaskAddForm />
+        <TaskAddForm onTaskAdded={refreshTasks} />
       </div>
 
       {/* Sorting Options */}
@@ -146,10 +146,12 @@ export default function TaskList({ tasks }) {
                     task={task}
                     onUpdateTask={() => {
                       setEditingTaskId(null);
+                      refreshTasks();
                     }}
                     onCancel={() => setEditingTaskId(null)}
                     onDeleteTask={() => {
                       setEditingTaskId(null);
+                      refreshTasks();
                     }}
                   />
                 </div>

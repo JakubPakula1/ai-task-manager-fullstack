@@ -7,13 +7,12 @@ export default function TaskEditForm({
   onCancel,
   onDeleteTask,
 }) {
-  console.log("TaskEditForm task:", task); // Log the task prop
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [priority, setPriority] = useState(task.priority);
   const [status, setStatus] = useState(task.status);
   const [dueDate, setDueDate] = useState(
-    task.dueDate ? task.dueDate.split("T")[0] : "" // Wyciągnij tylko część daty
+    task.dueDate ? task.dueDate.split("T")[0] : ""
   );
 
   const handleSubmit = async (e) => {
@@ -23,10 +22,10 @@ export default function TaskEditForm({
       description,
       priority,
       status,
-      due_date: dueDate, // Dodaj due_date do obiektu zadania
+      due_date: dueDate,
     };
 
-    const token = Cookies.get("token"); // Pobierz token z ciasteczek
+    const token = Cookies.get("token");
 
     try {
       const response = await fetch(
@@ -34,10 +33,10 @@ export default function TaskEditForm({
         {
           method: "PATCH",
           headers: {
-            Authorization: `Bearer ${token}`, // Dodaj token do nagłówka
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(updatedTask), // Prześlij tylko zmienione pola
+          body: JSON.stringify(updatedTask),
         }
       );
 
@@ -47,14 +46,14 @@ export default function TaskEditForm({
 
       const data = await response.json();
       console.log("Task updated successfully:", data);
-      onUpdateTask(data); // Przekaż zaktualizowane zadanie do komponentu nadrzędnego
+      onUpdateTask(data);
     } catch (error) {
       console.error("Error updating task:", error);
     }
   };
 
   const handleDelete = async () => {
-    const token = Cookies.get("token"); // Pobierz token z ciasteczek
+    const token = Cookies.get("token");
 
     try {
       const response = await fetch(
@@ -62,7 +61,7 @@ export default function TaskEditForm({
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`, // Dodaj token do nagłówka
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
@@ -73,7 +72,7 @@ export default function TaskEditForm({
       }
 
       console.log("Task deleted successfully");
-      onDeleteTask(task.id); // Przekaż ID usuniętego zadania do komponentu nadrzędnego
+      onDeleteTask(task.id);
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -82,7 +81,7 @@ export default function TaskEditForm({
   return (
     <form
       onSubmit={handleSubmit}
-      onClick={(e) => e.stopPropagation()} // Zapobiegaj propagacji kliknięcia
+      onClick={(e) => e.stopPropagation()}
       className="w-full p-6 bg-white rounded-lg shadow-md space-y-4 text-black"
     >
       <h2 className="text-xl font-bold text-gray-800">Edit Task</h2>
@@ -151,7 +150,7 @@ export default function TaskEditForm({
           onChange={(e) => setStatus(e.target.value)}
           className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="TODO">Pending</option>
+          <option value="TODO">To do</option>
           <option value="IN_PROGRESS">In Progress</option>
           <option value="DONE">Completed</option>
           <option value="CANCELED">Canceled</option>
