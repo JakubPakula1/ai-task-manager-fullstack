@@ -1,16 +1,44 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function RegisterForm() {
+export default function RegisterForm({ onRegister }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add registration logic (e.g., send data to API)
-    console.log("Username:", username);
-    console.log("Email:", email);
-    console.log("Password:", password);
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+      onRegister();
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError(err.message || "An error occurred during registration");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -18,6 +46,13 @@ export default function RegisterForm() {
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
         Create an Account
       </h2>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label
@@ -34,6 +69,7 @@ export default function RegisterForm() {
             className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter your username"
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -52,6 +88,7 @@ export default function RegisterForm() {
             className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter your email"
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -70,14 +107,18 @@ export default function RegisterForm() {
             className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter your password"
             required
+            disabled={isLoading}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className={`w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+            isLoading ? "opacity-70 cursor-not-allowed" : ""
+          }`}
+          disabled={isLoading}
         >
-          Sign Up
+          {isLoading ? "Signing Up..." : "Sign Up"}
         </button>
       </form>
     </div>

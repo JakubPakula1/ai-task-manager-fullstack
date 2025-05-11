@@ -13,7 +13,7 @@ export default function LoginRegisterPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg">
-        {isLogin ? <LoginForm /> : <RegisterForm />}
+        {isLogin ? <LoginForm /> : <RegisterForm onRegister={toggleForm} />}
         <p className="mt-4 text-sm text-center text-gray-400">
           {isLogin ? (
             <>
