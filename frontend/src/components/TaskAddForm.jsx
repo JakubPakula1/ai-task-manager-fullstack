@@ -6,7 +6,73 @@ export default function TaskAddForm() {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [status, setStatus] = useState("Pending");
-  const [dueDate, setDueDate] = useState(""); // Dodaj stan dla due_date
+  const [dueDate, setDueDate] = useState("");
+  const [isLoadingPriority, setIsLoadingPriority] = useState(false);
+  const [priorityError, setPriorityError] = useState(null);
+
+  async function getPriority(taskDescription) {
+    const url = "http://localhost:5001/api/priority";
+    const payload = {
+      task: taskDescription,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error:", errorData);
+        return { error: errorData.error };
+      }
+
+      const data = await response.json();
+      console.log("Server response:", data);
+      return data;
+    } catch (error) {
+      console.error("Network error:", error);
+      return { error: "Network error" };
+    }
+  }
+
+  const handleSuggestPriority = async (e) => {
+    e.preventDefault();
+
+    if (!description) {
+      setPriorityError("Enter task description to get priority suggestion");
+      return;
+    }
+
+    setIsLoadingPriority(true);
+    setPriorityError(null);
+
+    try {
+      const result = await getPriority(description);
+
+      if (result.priority) {
+        const mappedPriority =
+          result.priority.toUpperCase() === "HIGH"
+            ? "High"
+            : result.priority.toUpperCase() === "LOW"
+            ? "Low"
+            : "Medium";
+        setPriority(mappedPriority);
+        console.log(`Suggested priority: ${mappedPriority}`);
+      } else {
+        setPriorityError(result.error || "Failed to get priority suggestion");
+      }
+    } catch (error) {
+      console.error("Error while getting priority:", error);
+      setPriorityError("Communication error with server");
+    } finally {
+      setIsLoadingPriority(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,7 +81,7 @@ export default function TaskAddForm() {
       description,
       priority,
       status,
-      due_date: dueDate, // Dodaj due_date do obiektu zadania
+      due_date: dueDate,
     };
     const token = Cookies.get("token");
     fetch("http://localhost:8080/api/tasks", {
@@ -24,7 +90,7 @@ export default function TaskAddForm() {
         authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newTask), // Prześlij wszystkie pola, w tym due_date
+      body: JSON.stringify(newTask),
     })
       .then((response) => {
         if (!response.ok) {
@@ -41,7 +107,8 @@ export default function TaskAddForm() {
         setDescription("");
         setPriority("Medium");
         setStatus("Pending");
-        setDueDate(""); // Zresetuj pole due_date
+        setDueDate("");
+        setPriorityError(null);
       })
       .catch((error) => {
         console.error("Error creating task:", error);
@@ -89,12 +156,29 @@ export default function TaskAddForm() {
         ></textarea>
       </div>
       <div>
-        <label
-          htmlFor="priority"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Priority
-        </label>
+        <div className="flex justify-between items-center mb-1">
+          <label
+            htmlFor="priority"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Priority
+          </label>
+          <button
+            type="button"
+            onClick={handleSuggestPriority}
+            disabled={isLoadingPriority}
+            className={`text-sm px-3 py-1 rounded ${
+              isLoadingPriority
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600 text-white"
+            }`}
+          >
+            {isLoadingPriority ? "Suggesting..." : "Suggest Priority"}
+          </button>
+        </div>
+        {priorityError && (
+          <p className="text-xs text-red-600 mb-1">{priorityError}</p>
+        )}
         <select
           id="priority"
           value={priority}
