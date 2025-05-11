@@ -57,10 +57,10 @@ export default function TaskAddForm({ onTaskAdded }) {
       if (result.priority) {
         const mappedPriority =
           result.priority.toUpperCase() === "HIGH"
-            ? "High"
+            ? "HIGH"
             : result.priority.toUpperCase() === "LOW"
-            ? "Low"
-            : "Medium";
+            ? "LOW"
+            : "MEDIUM";
         setPriority(mappedPriority);
         console.log(`Suggested priority: ${mappedPriority}`);
       } else {
