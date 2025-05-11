@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
 import requests
 import json
+import os
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app) 
-OLLAMA_URL = 'http://localhost:11434/api/generate'
+base_url = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
+OLLAMA_URL = f"{base_url}/api/generate"
 OLLAMA_MODEL = 'llama3.2'
 
 @app.route('/api/priority', methods=['POST'])
@@ -51,4 +53,4 @@ def get_priority():
         return jsonify({'error': f'Service error: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(host='0.0.0.0',debug=True, port=5001)
