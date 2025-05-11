@@ -7,11 +7,14 @@ export default function TaskEditForm({
   onCancel,
   onDeleteTask,
 }) {
+  console.log("TaskEditForm task:", task); // Log the task prop
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [priority, setPriority] = useState(task.priority);
   const [status, setStatus] = useState(task.status);
-  const [dueDate, setDueDate] = useState(task.due_date || ""); // Dodaj stan dla due_date
+  const [dueDate, setDueDate] = useState(
+    task.dueDate ? task.dueDate.split("T")[0] : "" // Wyciągnij tylko część daty
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
