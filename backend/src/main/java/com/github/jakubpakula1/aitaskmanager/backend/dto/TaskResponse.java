@@ -9,6 +9,8 @@ public class TaskResponse {
     private String title;
     private String description;
     private Task.Status status;
+    private String priority;
+    private String dueDate;
     private String createdAt;
     private String updatedAt;
     private Long userId;

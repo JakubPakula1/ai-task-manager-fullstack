@@ -11,6 +11,7 @@ export default function TaskEditForm({
   const [description, setDescription] = useState(task.description);
   const [priority, setPriority] = useState(task.priority);
   const [status, setStatus] = useState(task.status);
+  const [dueDate, setDueDate] = useState(task.due_date || ""); // Dodaj stan dla due_date
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +20,7 @@ export default function TaskEditForm({
       description,
       priority,
       status,
+      due_date: dueDate, // Dodaj due_date do obiektu zadania
     };
 
     const token = Cookies.get("token"); // Pobierz token z ciasteczek
@@ -128,9 +130,9 @@ export default function TaskEditForm({
           onChange={(e) => setPriority(e.target.value)}
           className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
         </select>
       </div>
       <div>
@@ -146,10 +148,27 @@ export default function TaskEditForm({
           onChange={(e) => setStatus(e.target.value)}
           className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="Pending">Pending</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
+          <option value="TODO">Pending</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="DONE">Completed</option>
+          <option value="CANCELED">Canceled</option>
         </select>
+      </div>
+      <div>
+        <label
+          htmlFor="due_date"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Due Date
+        </label>
+        <input
+          type="date"
+          id="due_date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          required
+        />
       </div>
       <div className="flex justify-between gap-4">
         <button

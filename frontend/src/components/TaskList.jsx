@@ -2,7 +2,7 @@ import { useState } from "react";
 import TaskEditForm from "./TaskEditForm";
 import TaskAddForm from "./TaskAddForm";
 
-export default function TaskList({ tasks, onUpdateTask, onAddTask }) {
+export default function TaskList({ tasks }) {
   const [editingTaskId, setEditingTaskId] = useState(null);
 
   return (
@@ -11,7 +11,7 @@ export default function TaskList({ tasks, onUpdateTask, onAddTask }) {
 
       {/* Add Task Form */}
       <div className="mb-4">
-        <TaskAddForm onAddTask={onAddTask} />
+        <TaskAddForm />
       </div>
 
       {/* Task List */}
@@ -37,9 +37,9 @@ export default function TaskList({ tasks, onUpdateTask, onAddTask }) {
                 <div className="mt-4 sm:mt-0 sm:ml-4 flex items-center gap-4">
                   <span
                     className={`px-3 py-1 text-sm font-medium rounded-full ${
-                      task.status === "Completed"
+                      task.status === "DONE"
                         ? "bg-green-100 text-green-800"
-                        : task.status === "In Progress"
+                        : task.status === "IN_PROGRESS"
                         ? "bg-yellow-100 text-yellow-800"
                         : "bg-red-100 text-red-800"
                     }`}
@@ -65,11 +65,10 @@ export default function TaskList({ tasks, onUpdateTask, onAddTask }) {
                 <div className="mt-4">
                   <TaskEditForm
                     task={task}
-                    onUpdateTask={(updatedTask) => {
-                      onUpdateTask(updatedTask);
-                      setEditingTaskId(null); // Close the edit form after saving
+                    onUpdateTask={() => {
+                      setEditingTaskId(null);
                     }}
-                    onCancel={() => setEditingTaskId(null)} // Close the edit form
+                    onCancel={() => setEditingTaskId(null)}
                   />
                 </div>
               )}

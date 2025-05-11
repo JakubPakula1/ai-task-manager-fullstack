@@ -1,11 +1,12 @@
 import Cookies from "js-cookie";
 import { useState } from "react";
 
-export default function TaskAddForm({ onAddTask }) {
+export default function TaskAddForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [status, setStatus] = useState("Pending");
+  const [dueDate, setDueDate] = useState(""); // Dodaj stan dla due_date
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,6 +15,7 @@ export default function TaskAddForm({ onAddTask }) {
       description,
       priority,
       status,
+      due_date: dueDate, // Dodaj due_date do obiektu zadania
     };
     const token = Cookies.get("token");
     fetch("http://localhost:8080/api/tasks", {
@@ -22,7 +24,7 @@ export default function TaskAddForm({ onAddTask }) {
         authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title: "test", description: "test" }),
+      body: JSON.stringify(newTask), // Prześlij wszystkie pola, w tym due_date
     })
       .then((response) => {
         if (!response.ok) {
@@ -35,11 +37,11 @@ export default function TaskAddForm({ onAddTask }) {
       })
       .then((data) => {
         console.log("Task created successfully:", data);
-        onAddTask(data); // Pass the created task to the parent component
         setTitle("");
         setDescription("");
         setPriority("Medium");
         setStatus("Pending");
+        setDueDate(""); // Zresetuj pole due_date
       })
       .catch((error) => {
         console.error("Error creating task:", error);
@@ -121,6 +123,22 @@ export default function TaskAddForm({ onAddTask }) {
           <option value="In Progress">In Progress</option>
           <option value="Completed">Completed</option>
         </select>
+      </div>
+      <div>
+        <label
+          htmlFor="due_date"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Due Date
+        </label>
+        <input
+          type="date"
+          id="due_date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          required
+        />
       </div>
       <button
         type="submit"

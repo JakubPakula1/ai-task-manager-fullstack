@@ -24,6 +24,12 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
+
+    @Column(name = "due_date", columnDefinition = "TIMESTAMP")
+    private LocalDateTime dueDate;
+
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
@@ -50,5 +56,10 @@ public class Task {
         IN_PROGRESS,
         DONE,
         CANCELED
+    }
+    public enum Priority {
+        LOW,
+        MEDIUM,
+        HIGH
     }
 }
