@@ -2,10 +2,25 @@
 import { useEffect, useState } from "react";
 import TaskList from "../../components/TaskList";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function TaskPage() {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Sprawdź, czy token istnieje
+    const token = Cookies.get("token");
+    if (!token) {
+      // Jeśli nie ma tokenu, przekieruj na stronę logowania
+      router.push("/login");
+      return;
+    }
+
+    // Jeśli token istnieje, pobierz zadania
+    fetchTasks();
+  }, [router]);
 
   const fetchTasks = async () => {
     const token = Cookies.get("token");
@@ -34,9 +49,6 @@ export default function TaskPage() {
       setError(err.message);
     }
   };
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">

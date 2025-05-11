@@ -45,7 +45,6 @@ export default function TaskEditForm({
       }
 
       const data = await response.json();
-      console.log("Task updated successfully:", data);
       onUpdateTask(data);
     } catch (error) {
       console.error("Error updating task:", error);
@@ -71,7 +70,6 @@ export default function TaskEditForm({
         throw new Error(`Failed to delete task: ${response.status}`);
       }
 
-      console.log("Task deleted successfully");
       onDeleteTask(task.id);
     } catch (error) {
       console.error("Error deleting task:", error);
