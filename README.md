@@ -80,24 +80,24 @@ curl -X POST http://localhost:11434/api/pull -d '{"name": "llama3.2"}'
 
 # Authentication
 
-Access the login page at /login
-Create a new account at /register
-Authentication is handled via JWT tokens stored in cookies
-Tokens expire after 24 hours of inactivity
+- Access the login page at /login
+- Create a new account at /register
+- Authentication is handled via JWT tokens stored in cookies
+- Tokens expire after 24 hours of inactivity
 
 # Task Management
 
-View all your tasks at the dashboard
-Create new tasks by clicking "Add Task"
-Edit tasks by clicking on them
-Delete tasks using the delete button in edit mode
-Tasks are automatically prioritized based on their description using AI
-Filter tasks by status, priority, or due date
-Sort tasks by different criteria
+- View all your tasks at the dashboard
+- Create new tasks by clicking "Add Task"
+- Edit tasks by clicking on them
+- Delete tasks using the delete button in edit mode
+- Tasks are automatically prioritized based on their description using AI
+- Filter tasks by status, priority, or due date
+- Sort tasks by different criteria
 
 # Admin Features
 
-Admins can view all users' tasks
-Access the admin dashboard at /admin
-Manage user accounts
-Review system statistics
+- Admins can view all users' tasks
+- Access the admin dashboard at /admin
+- Manage user accounts
+- Review system statistics
